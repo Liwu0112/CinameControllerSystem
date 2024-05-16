@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>用户注册</title>
+  <!-- 引入layui css -->
+  <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css"/>
+  <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script></head>
+<body>
+<div id="app">
+  <form class="layui-form" action="">
+    <div class="layui-form-item">
+      <label class="layui-form-label">用户名称</label>
+      <div class="layui-input-block">
+        <input type="text" name="userName" v-model="user.userName" required lay-verify="required" placeholder="请输入用户名称" autocomplete="off"
+               class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">用户电话</label>
+      <div class="layui-input-block">
+        <input type="text" name="userPhone" v-model="user.userPhone" required lay-verify="required" placeholder="请输入用户电话" autocomplete="off"
+               class="layui-input">
+      </div>
+    </div>
+
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">用户密码</label>
+      <div class="layui-input-block">
+        <input type="text" name="userPassword" v-model="user.userPassword" required lay-verify="required" placeholder="请输入用户密码" autocomplete="off" class="layui-input"></input>
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <input type="button" class="layui-btn" @click="userRegister()" value="立即提交">
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+  new Vue({
+    el:"#app",
+    data(){
+      return{
+        user: {
+          userBalance:5000,
+          isDelete:0,
+          ticketsCount:0
+        }
+      }
+    },
+    methods: {
+      userRegister(){
+        var _this = this;
+        axios({
+          method: "POST",
+          url: "http://127.0.0.1:60/user/userRegister/",
+          data: _this.user,
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          }
+        }).then(resp => {
+          var code = resp.data.code;
+          if (code == "200") {
+            alert("注册成功");
+            window.location.href = "../common/login.html";
+          } else {
+            alert("注册失败");
+          }
+        })
+      }
+    }
+  })
+</script>
+</body>
+</html>

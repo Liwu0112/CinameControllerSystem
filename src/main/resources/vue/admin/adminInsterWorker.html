@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>新增员工信息</title>
+  <!-- 引入layui css -->
+  <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css"/>
+  <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script></head>
+<body>
+<div id="app">
+  <a href="adminIndex.html" style="float: right">点击返回首页</a>
+  <form class="layui-form" action="">
+    <div class="layui-form-item">
+      <label class="layui-form-label">员工姓名</label>
+      <div class="layui-input-block">
+        <input type="text" name="workerName" v-model="worker.workerName" required lay-verify="required" placeholder="请输入员工姓名" autocomplete="off"
+               class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">员工年龄</label>
+      <div class="layui-input-block">
+        <input type="text-local" name="workerAge" v-model="worker.workerAge" required lay-verify="required" placeholder="请输入员工年龄" autocomplete="off" class="layui-input"></input>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">员工性别</label>
+      <div class="layui-input-block">
+        <input type="text" name="workerSex" v-model="worker.workerSex" required lay-verify="required" placeholder="请输入员工性别" autocomplete="off" class="layui-input"></input>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">入职时间</label>
+      <div class="layui-input-block">
+        <input type="datetime-local" name="workerIntodate" v-model="worker.workerIntodate" required lay-verify="required" placeholder="请输入入职时间" autocomplete="off" class="layui-input"></input>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">工作岗位</label>
+      <div class="layui-input-block">
+        <input type="text" name="workerPost" v-model="worker.workerPost" required lay-verify="required" placeholder="请输入工作岗位" autocomplete="off" class="layui-input"></input>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">联系电话</label>
+      <div class="layui-input-block">
+        <input type="text" name="workerPhone" v-model="worker.workerPhone" required lay-verify="required" placeholder="请输入联系电话" autocomplete="off" class="layui-input"></input>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">初始密码</label>
+      <div class="layui-input-block">
+        <input type="text" name="workerPassword" v-model="worker.workerPassword" required lay-verify="required" placeholder="请输入初始密码" autocomplete="off" class="layui-input"></input>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <input type="button" class="layui-btn" @click="insterWorker()" value="立即提交">
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+  new Vue({
+    el:"#app",
+    data(){
+      return{
+        worker: {
+          isDelete:0,
+          isRelex:0
+        }
+      }
+    },
+    methods: {
+      insterWorker(){
+        var _this = this;
+        axios({
+          method: "POST",
+          url: "http://127.0.0.1:60/admin/adminInsterWorker/",
+          data: _this.worker,
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          }
+        }).then(resp => {
+          var code = resp.data.code;
+          if (code == "200") {
+            alert("新增数据成功");
+            window.location.href = "adminIndex.html";
+          } else {
+            alert("新增数据失败");
+          }
+        })
+      }
+    }
+  })
+</script>
+</body>
+</html>

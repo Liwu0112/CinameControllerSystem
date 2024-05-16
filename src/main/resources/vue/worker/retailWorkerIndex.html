@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>员工首页</title>
+    <!-- 引入layui css -->
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css"/>
+    <!-- 引入vue.js -->
+    <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <p>员工名: {{ workerName }}</p>
+    <a :href="'workerIsRelex.html?workerName='+workerName">点击请求休假/辞职</a><br>
+    <a :href="'workerSelectMyApplication.html?workerName='+workerName">点击查看申请结果</a><br>
+    <a :href="'workerUpdateInformation.html?workerName='+workerName">点击修改个人信息</a>
+    <a v-if="retails != ''" href="workerInsterRetail.html">新增零食</a>
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>零售id</th>
+            <th>零售名称</th>
+            <th>零售价格</th>
+            <th>零售信息</th>
+            <th>剩余数量</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="retail in retails">
+            <td>{{retail.retailId}}</td>
+            <td>{{retail.retailName}}</td>
+            <td>{{retail.retailPrice}}</td>
+            <td>{{retail.retailIntroduce}}</td>
+            <td>{{retail.retailCount}}</td>
+            <td>
+                <template>
+                    <div>
+                        <a v-if="retail.isDelete == 0">售货中</a>
+                        <a v-if="retail.isDelete == 1">待上架</a>
+                    </div>
+                </template>
+            </td>
+            <td>
+                <template>
+                    <div>
+                        <a v-if="retail.isDelete == 0" @click="workerOffShelvesRetail(retail.retailId)">下架</a>
+                        <a v-if="retail.isDelete == 1" @click="workerShelvesRetail(retail.retailId)">上架</a>
+                        <a :href="'workerAddRetail.html?retailId='+retail.retailId">补货</a><br>
+                        <a @click="workerDeleteRetail(retail.retailId)">删除</a>
+                    </div>
+                </template>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    /**
+     * 页面加载之后发送ajax请求
+     */
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                retails: [],
+                workerName: '',
+                isRelex: ''
+            };
+        },
+        methods: {
+            workerOffShelvesRetail(retailId) {
+                var _this = this;
+                axios({
+                    // 请求方式
+                    method: 'PUT',
+                    // 请求的地址
+                    url: 'http://127.0.0.1:60/worker/workerOffShelvesRetail/' + retailId,
+                }).then(function (result) {
+                    var code = result.data.code;
+                    if (code == "200") {
+                        alert('下架成功');
+                        window.location.href = "retailWorkerIndex.html";
+                    } else {
+                        alert("下架失败");
+                    }
+                });
+            },
+            workerShelvesRetail(retailId) {
+                var _this = this;
+                axios({
+                    // 请求方式
+                    method: 'PUT',
+                    // 请求的地址
+                    url: 'http://127.0.0.1:60/worker/workerShelvesRetail/' + retailId,
+                }).then(function (result) {
+                    var code = result.data.code;
+                    if (code == "200") {
+                        alert('上架成功');
+                        window.location.href = "retailWorkerIndex.html";
+                    } else {
+                        alert("上架失败");
+                    }
+                });
+            },
+            workerDeleteRetail(retailId){
+                var _this = this;
+                axios({
+                    // 请求方式
+                    method: 'DELETE',
+                    // 请求的地址
+                    url: 'http://127.0.0.1:60/worker/workerDeleteRetail/' + retailId,
+                }).then(function (result) {
+                    var code = result.data.code;
+                    if (code == "200") {
+                        alert('删除成功');
+                        window.location.href = "retailWorkerIndex.html";
+                    } else {
+                        alert("删除失败");
+                    }
+                });
+            }
+        },
+        mounted() {
+            var _this = this;
+            _this.workerName = document.cookie.replace(/(?:(?:^|.*;\s*)workerName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            if (_this.workerName == '') {
+                window.location.href = "../common/login.html";
+            }
+            // 发送第一个 Axios 请求，获取员工是否休息的信息
+            axios({
+                method: "GET",
+                url: 'http://127.0.0.1:60/worker/workerSelectByWorkerName/' + _this.workerName,
+            }).then(function (result) {
+                var code = result.data.code;
+                var isRelex = result.data.data.isRelex;
+                if (code == "200") {
+                    _this.isRelex = isRelex;
+                    // 根据员工是否休息的信息，发送第二个 Axios 请求
+                    if (_this.isRelex == 0){
+                        axios({
+                            method: "GET",
+                            url: "http://127.0.0.1:60/worker/workerSelectAllRetail",
+                        }).then(function (result) {
+                            var code = result.data.code;
+                            var data = result.data.data;
+                            if (code == "200") {
+                                _this.retails = data;
+                                // 在此处处理第二个 Axios 请求的返回结果
+                            }
+                        });
+                    } else {
+                        alert("请先申请复工");
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

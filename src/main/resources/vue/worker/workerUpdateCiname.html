@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改电影数据</title>
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css"/>
+    <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <a href="workerIndex.html" style="float: right">点击返回首页</a>
+    <form class="layui-form" action="">
+        <div class="layui-form-item" style="display: none">
+            <label class="layui-form-label">电影ID</label>
+            <div class="layui-input-block">
+                <input type="text" name="cinameId" v-model="ciname.cinameId" id="cinameId" required lay-verify="required"
+                       autocomplete="off"
+                       class="layui-input"></div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">电影名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="cinameName" v-model="ciname.cinameName" id="cinameName" required
+                       lay-verify="required"
+                       placeholder="请输入电影名称"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">开始时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="beginDate" v-model="ciname.beginDate" id="beginDate" required lay-verify="required"
+                       placeholder="请输入开始时间"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">结束时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="overDate" v-model="ciname.overDate" id="overDate" required lay-verify="required"
+                       placeholder="请输入结束时间"
+                       autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div><div class="layui-form-item">
+        <label class="layui-form-label">地点</label>
+        <div class="layui-input-block">
+            <input type="text" name="cinamePlace" v-model="ciname.cinamePlace" id="cinamePlace" required lay-verify="required"
+                   placeholder="请输入观影地点"
+                   autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div><div class="layui-form-item">
+        <label class="layui-form-label">票价</label>
+        <div class="layui-input-block">
+            <input type="text" name="cinamePrice" v-model="ciname.cinamePrice" id="cinamePrice" required lay-verify="required"
+                   placeholder="请输入票价"
+                   autocomplete="off"
+                   class="layui-input">
+        </div>
+    </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="button" class="layui-btn" @click="updateCiname()" value="立即提交">
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null)
+            return unescape(r[2]);
+        return null; //返回参数值
+    }
+
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                ciname: {}
+            }
+        },
+        methods: {
+            updateCiname() {
+                var _this = this;
+                axios({
+                    method: "PUT",
+                    url: "http://127.0.0.1:60/worker/workerUpdateCiname",
+                    data: _this.ciname,
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    }
+                }).then(resp => {
+                    var code = resp.data.code;
+                    if (code == "200") {
+                        alert("修改数据成功");
+                        window.location.href = "workerIndex.html";
+                    } else {
+                        alert("修改数据失败");
+                    }
+                })
+            }
+        },
+      mounted() {
+        //1.获取地址栏参数
+        var cinameId = getUrlParam("cinameId");
+        var _this = this;
+        //2.发送ajax请求
+        axios({
+          // 请求方式
+          method: 'get',
+          // 请求的地址
+          url: 'http://127.0.0.1:60/worker/workerGetById/' + cinameId,
+        }).then(function (result) {
+          var code = result.data.code;
+          if (code == "200") {
+            _this.ciname = result.data.data;
+          } else {
+            alert("查询用户信息数据失败!");
+          }
+
+        })
+        }
+    })
+</script>
+</body>
+</html>

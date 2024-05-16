@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>员工查看申请</title>
+    <!-- 引入layui css -->
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css"/>
+    <!-- 引入vue.js -->
+    <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script></head>
+<body>
+<div id="app">
+    <div>
+        <a href="workerIsRelex.html">继续申请</a>
+        <a v-if="workerInformation.workerPost == '售票员'" href="workerIndex.html" style="float: right">点击返回首页</a>
+        <a v-if="workerInformation.workerPost == '零售员'" href="retailWorkerIndex.html" style="float: right">点击返回首页</a>
+    </div>
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>申请编号</th>
+            <th>员工id</th>
+            <th>员工姓名</th>
+            <th>申请信息</th>
+            <th>申请时间</th>
+            <th>申请结果</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="application in applications">
+            <td>{{application.applicationId}}</td>
+            <td>{{application.workerId}}</td>
+            <td>{{application.workerName}}</td>
+            <td>{{application.workerApplication}}</td>
+            <td>{{application.applicationDate}}</td>
+            <td>
+                <template>
+                    <div>
+                        {{application.applicationResult == 1 ? "同意":"不同意"}}
+                    </div>
+                </template>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    /**
+     * 页面加载之后发送ajax请求
+     */
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                applications: [],
+                workerName: '',
+                workerInformation: {}
+            };
+        },
+        mounted() {
+            var _this = this;
+            _this.workerName = document.cookie.replace(/(?:(?:^|.*;\s*)workerName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            axios({
+                method: "GET",
+                url: 'http://127.0.0.1:60/worker/workerSelectHistoryApplication/' + _this.workerName,
+            }).then(function (result) {
+                var code = result.data.code;
+                var data = result.data.data;
+                if (code == "200") {
+                    _this.applications = data;
+                }
+            });
+            axios({
+                method: "GET",
+                url: 'http://127.0.0.1:60/worker/workerSelectByWorkerName/' + _this.workerName,
+            }).then(function (result) {
+                var code = result.data.code;
+                var data = result.data.data;
+                if (code == "200") {
+                    _this.workerInformation = data;
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

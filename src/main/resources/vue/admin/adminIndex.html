@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>管理员首页</title>
+  <!-- 引入layui css -->
+  <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css" />
+  <!-- 引入vue.js -->
+  <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+  <p>管理员: {{ adminName }}</p>
+  <a href="adminSelectApplicatoon.html">点击查看休假信息</a><br>
+  <a href="adminInsterWorker.html">点击新增员工信息</a>
+  <table class="layui-table">
+    <colgroup>
+      <col width="150">
+      <col width="200">
+      <col>
+    </colgroup>
+    <thead>
+    <tr>
+      <th>员工ID</th>
+      <th>员工姓名</th>
+      <th>员工入职时间</th>
+      <th>员工岗位</th>
+      <th>员工手机号码</th>
+      <th>状态</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="worker in workers">
+      <td>{{worker.workerId}}</td>
+      <td>{{worker.workerName}}</td>
+      <td>{{worker.workerIntodate}}</td>
+      <td>{{worker.workerPost}}</td>
+      <td>{{worker.workerPhone}}</td>
+      <td>
+        <div>
+          {{worker.isRelex === 0 ? "上班中" : "休息中"}}
+        </div>
+      </td>
+      <td>
+        <a @click="delWorker(worker.workerId)">辞退</a>&nbsp;
+        <a :href="'adminChangeWorkerPost.html?workerId='+worker.workerId">调岗</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<script>
+  /**
+   * 页面加载之后发送ajax请求
+   */
+  new Vue({
+    el: "#app",
+    data() {
+      return {
+        workers: [],
+        adminName: '',
+      maskedPhone: ''
+      };
+    },
+    methods: {
+      delWorker(workerId) {
+        var _this = this;
+        axios({
+          // 请求方式
+          method: 'PUT',
+          // 请求的地址
+          url:'http://127.0.0.1:60/admin/adminDeleteById/'+workerId,
+        }).then(function (result) {
+          var code = result.data.code;
+          if (code == "200") {
+            alert('辞退成功');
+            window.location.href = "adminIndex.html";
+          } else {
+            alert("辞退失败");
+          }
+        });
+      }
+    },
+    mounted() {
+      var _this=this;
+      _this.adminName = document.cookie.replace(/(?:(?:^|.*;\s*)adminName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+      if (_this.adminName == '') {
+        window.location.href = "../common/login.html";
+      }
+      axios({
+        method: "GET",
+        url: "http://127.0.0.1:60/admin/adminSelectAllWorker/",
+      }).then(function(result) {
+        var code = result.data.code;
+        var data = result.data.data;
+        if (code == "200") {
+          _this.workers=data;
+        }
+      })
+    }
+  });
+</script>
+</body>
+</html>

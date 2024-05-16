@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>新增零售信息</title>
+  <!-- 引入layui css -->
+  <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css"/>
+  <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+  <a href="retailWorkerIndex.html" style="float: right">点击返回首页</a>
+  <form class="layui-form" action="">
+    <div class="layui-form-item">
+      <label class="layui-form-label">零售名称</label>
+      <div class="layui-input-block">
+        <input type="text" name="retailName" v-model="retail.retailName" required lay-verify="required" placeholder="请输入零售名称" autocomplete="off"
+               class="layui-input">
+      </div>
+    </div>
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">零售价格</label>
+      <div class="layui-input-block">
+        <input type="number" name="retailPrice" v-model="retail.retailPrice" required lay-verify="required" placeholder="请输入零售价格" autocomplete="off"
+               class="layui-input">
+      </div>
+    </div>
+
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">零售介绍</label>
+      <div class="layui-input-block">
+        <input type="text" name="retailIntroduce" v-model="retail.retailIntroduce" required lay-verify="required" placeholder="请输入零售介绍" autocomplete="off" class="layui-input"></input>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">剩余数量</label>
+      <div class="layui-input-block">
+        <input type="number" name="retailCount" v-model="retail.retailCount" required lay-verify="required" placeholder="请输入剩余数量" autocomplete="off" class="layui-input"></input>
+      </div>
+    </div>
+    <div class="layui-form-item" style="display: none">
+      <label class="layui-form-label">是否发布</label>
+      <div class="layui-input-block">
+        <input type="text" name="isDelete" v-model="retail.isDelete" value="0" required lay-verify="required" placeholder="请输入0~1(0发布/1不发布）" autocomplete="off" class="layui-input"></input>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <input type="button" class="layui-btn" @click="insterRetail()" value="立即提交">
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+  new Vue({
+    el:"#app",
+    data(){
+      return{
+        retail: {
+          isDelete:0
+        }
+      }
+    },
+    methods: {
+      insterRetail(){
+        var _this = this;
+        axios({
+          method: "POST",
+          url: "http://127.0.0.1:60/worker/workerInsterRetail/",
+          data: _this.retail,
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+          }
+        }).then(resp => {
+          var code = resp.data.code;
+          if (code == "200") {
+            alert("新增数据成功");
+            window.location.href = "retailWorkerIndex.html";
+          } else {
+            alert("新增数据失败");
+          }
+        })
+      }
+    }
+  })
+</script>
+</body>
+</html>

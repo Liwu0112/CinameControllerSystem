@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>员工首页</title>
+    <!-- 引入layui css -->
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css"/>
+    <!-- 引入vue.js -->
+    <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script></head>
+<body>
+<div id="app">
+    <p>员工名: {{ workerName }}</p>
+    <a :href="'workerIsRelex.html?workerName='+workerName">点击请求休假/辞职</a><br>
+    <a :href="'workerSelectMyApplication.html?workerName='+workerName">点击查看申请结果</a><br>
+    <a :href="'workerUpdateInformation.html?workerName='+workerName">点击修改个人信息</a>
+    <a v-if="cinemas != ''" href="workerInsterCiname.html">点击新增电影</a>
+    <!--  <a :hrer="'workerSelectMyApplication.html?workerId='+workerId">点击查看申请</a>-->
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>电影ID</th>
+            <th>电影名称</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>地点</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="cinema in cinema">
+            <td>{{cinema.cinameId}}</td>
+            <td>{{cinema.cinameName}}</td>
+            <td>{{cinema.beginDate}}</td>
+            <td>{{cinema.overDate}}</td>
+            <td>{{cinema.cinamePlace}}</td>
+            <td>
+                <template>
+                    <div>
+                        <a v-if="cinema.isDelete == 0">上映中</a>
+                        <a v-if="cinema.isDelete == 1">下线中</a>
+                    </div>
+                </template>
+            </td>
+            <td>
+                <template>
+                    <div>
+                        <a :href="'workerUpdateCiname.html?cinameId='+cinema.cinameId">修改</a>
+                        <a v-if="cinema.isDelete == 0" @click="deleteCiname(cinema.cinameId)">下线</a>
+                        <a v-if="cinema.isDelete == 1" @click="addCiname(cinema.cinameId)">上映</a>
+                        <a @click="deleteCinameOutRight(cinema.cinameId)">删除</a>
+                        <a :href="'workerSelectCinameInformation.html?cinameId='+cinema.cinameId">查看</a>
+                    </div>
+                </template>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    /**
+     * 页面加载之后发送ajax请求
+     */
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                cinema: [],
+                workerName: '',
+                isRelex: ''
+            };
+        },
+        methods: {
+            deleteCiname(cinameId) {
+                var _this = this;
+                axios({
+                    // 请求方式
+                    method: 'PUT',
+                    // 请求的地址
+                    url: 'http://127.0.0.1:60/worker/workerDeleteCiname/' + cinameId,
+                }).then(function (result) {
+                    var code = result.data.code;
+                    var msg = result.data.msg;
+                    if (code == "200") {
+                        alert('下线成功');
+                        window.location.href = "workerIndex.html";
+                    } else {
+                        alert(msg);
+                    }
+                });
+            },
+            addCiname(cinameId) {
+                var _this = this;
+                axios({
+                    // 请求方式
+                    method: 'PUT',
+                    // 请求的地址
+                    url: 'http://127.0.0.1:60/worker/workerAddCiname/' + cinameId,
+                }).then(function (result) {
+                    var code = result.data.code;
+                    if (code == "200") {
+                        alert('上映成功');
+                        window.location.href = "workerIndex.html";
+                    } else {
+                        alert("上映失败");
+                    }
+                });
+            },
+            deleteCinameOutRight(cinameId){
+                var _this = this;
+                axios({
+                    // 请求方式
+                    method: 'DELETE',
+                    // 请求的地址
+                    url: 'http://127.0.0.1:60/worker/workerDeleteCinameOutRight/' + cinameId,
+                }).then(function (result) {
+                    var code = result.data.code;
+                    var msg = result.data.msg;
+                    if (code == "200") {
+                        alert('删除成功');
+                        window.location.href = "workerIndex.html";
+                    } else {
+                        alert(msg);
+                    }
+                });
+            }
+        },
+        mounted() {
+            var _this = this;
+            _this.workerName = document.cookie.replace(/(?:(?:^|.*;\s*)workerName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            if (_this.workerName == '') {
+                window.location.href = "../common/login.html";
+            }
+            axios({
+                method: "GET",
+                url: 'http://127.0.0.1:60/worker/workerSelectByWorkerName/'+_this.workerName,
+            }).then(function (result) {
+                var code = result.data.code;
+                var data = result.data.data;
+                if (code == "200") {
+                    _this.isRelex = data.isRelex;
+                    // 根据员工是否休息的信息，发送第二个 Axios 请求
+                    if (_this.isRelex == 0){
+                        axios({
+                            method: "GET",
+                            url: "http://127.0.0.1:60/worker/workerSelectAllCinemas",
+                        }).then(function (result) {
+                            var code = result.data.code;
+                            var data = result.data.data;
+                            if (code == "200") {
+                                _this.cinemas = data;
+                                // 在此处处理第二个 Axios 请求的返回结果
+                            }
+                        });
+                    } else {
+                        alert("请先申请复工");
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

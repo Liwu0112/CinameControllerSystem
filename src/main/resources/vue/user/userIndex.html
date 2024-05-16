@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户首页</title>
+    <!-- 引入layui css -->
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css"/>
+    <!-- 引入vue.js -->
+    <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>
+        <div v-if="userName === ''">
+            <!-- 用户名为空，显示登录 -->
+            <a href="../common/login.html">登录</a>
+        </div>
+        <div v-else>
+            <!-- 用户名不为空，显示用户名 -->
+            <p>用户名: {{ userName }}</p>
+            <a :href="'userSelectMytickets.html?userName='+userName">点击查看自己的购票信息</a><br>
+            <a :href="'userSelectMyInformation.html?userName='+userName">点击查看个人信息</a>
+            <a  :href="'userRetailIndex.html?userName='+userName" style="float: right">点击购买商品</a>
+        </div>
+    </div>
+    </template>
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>电影ID</th>
+            <th>电影名称</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>票价</th>
+            <th>点击购票</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="cinema in cinemas">
+            <td>{{cinema.cinameId}}</td>
+            <td>{{cinema.cinameName}}</td>
+            <td>{{cinema.beginDate}}</td>
+            <td>{{cinema.overDate}}</td>
+            <td>{{cinema.cinamePrice}}</td>
+            <td>
+                <button @click="userBuyTicket(cinema)">购票</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    /**
+     * 页面加载之后发送ajax请求
+     */
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                cinemas: [],
+                user: {},
+                userName: '',
+                userselectmytickets: {}
+            };
+        },
+        methods: {
+            userBuyTicket(ciname) {
+                var _this = this;
+                _this.userselectmytickets = {
+                    userId: _this.user.userId,
+                    cinameName: ciname.cinameName,
+                    beginData: ciname.beginDate,
+                    overData: ciname.overDate,
+                    cinamePlace: ciname.cinamePlace,
+                };
+                if (_this.userselectmytickets.userId == null) {
+                    window.location.href = "../common/login.html";
+                }
+                axios({
+                    method: "POST",
+                    url: "http://127.0.0.1:60/user/userBuyTicket/",
+                    data: _this.userselectmytickets,
+                }).then(resp => {
+                    var code = resp.data.code;
+                    var msg = resp.data.msg;
+                    if (code == "200") {
+                        if (_this.userName === '') {
+                            window.location.href = "../common/login.html";
+                        } else {
+                            alert("购票成功");
+                            window.location.href = "userIndex.html";
+                        }
+                    } else {
+                        alert("购票失败："+msg);
+                    }
+                });
+            }
+        },
+        mounted() {
+            var _this = this;
+            _this.userName = document.cookie.replace(/(?:(?:^|.*;\s*)userName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            axios({
+                method: "GET",
+                url: "http://127.0.0.1:60/user/userSelectAllCinema/",
+            }).then(function (result) {
+                var code = result.data.code;
+                var data = result.data.data;
+                if (code == "200") {
+                    _this.cinemas = data;
+                }
+            });
+            axios({
+                method: "GET",
+                url: 'http://127.0.0.1:60/user/userSelectMyInformation/' + _this.userName,
+            }).then(function (result) {
+                var code = result.data.code;
+                var data = result.data.data;
+                if (code == "200") {
+                    _this.user = data;
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

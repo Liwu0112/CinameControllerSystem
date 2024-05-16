@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>用户查询自己购买的电影票</title>
+    <!-- 引入layui css -->
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css"/>
+    <!-- 引入vue.js -->
+    <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script></head>
+<body>
+<div id="app">
+    <a href="userIndex.html" style="float: right">点击返回首页</a>
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>用户ID</th>
+            <th>用户名称</th>
+            <th>用户电话</th>
+            <th>用户余额</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{user.userId}}</td>
+            <td>{{user.userName}}</td>
+            <td>{{user.userPhone}}</td>
+            <td>{{user.userBalance}}</td>
+            <td>
+                <a :href="'userUpdateMyInformation.html?userName='+user.userName">修改个人信息</a><br>
+                <a :href="'userUpdatePassword.html?userName='+user.userName">修改密码</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null)
+            return unescape(r[2]);
+        return null; //返回参数值
+    }
+
+    /**
+     * 页面加载之后发送ajax请求
+     */
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                user: {},
+                userName: ''
+            };
+        },
+        methods: {
+
+        },
+        mounted() {
+            var _this = this;
+            _this.userName = getUrlParam("userName");
+            axios({
+                method: "GET",
+                url: 'http://127.0.0.1:60/user/userSelectMyInformation/'+_this.userName,
+            }).then(function (result) {
+                var code = result.data.code;
+                var data = result.data.data;
+                var phone = result.data.data.userPhone;
+                if (code == "200") {
+                    _this.user = data;
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

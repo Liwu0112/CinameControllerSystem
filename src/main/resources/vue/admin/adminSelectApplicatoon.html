@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>管理员查看员工申请</title>
+  <!-- 引入layui css -->
+  <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css" />
+  <!-- 引入vue.js -->
+  <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script></head>
+<body>
+<div id="app">
+  <a href="adminSelectOverApplicatoon.html">点击查看已处理信息</a>
+  <a href="adminIndex.html" style="float: right">点击返回首页</a>
+  <table class="layui-table">
+    <colgroup>
+      <col width="150">
+      <col width="200">
+      <col>
+    </colgroup>
+    <thead>
+    <tr>
+      <th>员工ID</th>
+      <th>员工姓名</th>
+      <th>员工申请信息</th>
+      <th>员工申请时间</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="application in applications">
+      <td>{{application.workerId}}</td>
+      <td>{{application.workerName}}</td>
+      <td>{{application.workerApplication}}</td>
+      <td>{{application.applicationDate}}</td>
+      <td>
+        <div>
+            <button v-if="application.workerApplication === '辞职'" @click="agreeDelWorker(application.applicationId)">同意</button>
+            <button v-if="application.workerApplication === '休假'" @click="agreeRelexWorker(application.applicationId)">同意</button>
+          <button v-if="application.workerApplication === '复工'" @click="agreeWork(application.applicationId)">同意</button>
+            <button @click="refuseApplication(application.applicationId)">拒绝</button>
+      </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<script>
+  /**
+   * 页面加载之后发送ajax请求
+   */
+  new Vue({
+    el: "#app",
+    data() {
+      return {
+        applications: []
+      };
+    },
+    methods: {
+      agreeDelWorker(applicationId) {
+        var _this = this;
+        axios({
+          // 请求方式
+          method: 'PUT',
+          // 请求的地址
+          url:'http://127.0.0.1:60/admin/adminAgreeDeleteApplication/'+applicationId,
+        }).then(function (result) {
+          var code = result.data.code;
+          if (code == "200") {
+            alert('同意辞职成功');
+            window.location.href = "adminSelectApplicatoon.html";
+          } else {
+            alert("同意辞职失败");
+          }
+        });
+      },
+      agreeRelexWorker(applicationId){
+        var _this = this;
+        axios({
+          // 请求方式
+          method: 'PUT',
+          // 请求的地址
+          url:'http://127.0.0.1:60/admin/adminAgreeRelexApplication/'+applicationId,
+        }).then(function (result) {
+          var code = result.data.code;
+          if (code == "200") {
+            alert('同意休假成功');
+            window.location.href = "adminSelectApplicatoon.html";
+          } else {
+            alert("同意休假失败");
+          }
+        });
+      },
+      agreeWork(applicationId){
+        var _this = this;
+        axios({
+          // 请求方式
+          method: 'PUT',
+          // 请求的地址
+          url:'http://127.0.0.1:60/admin/adminAgreeWorkApplication/'+applicationId,
+        }).then(function (result) {
+          var code = result.data.code;
+          if (code == "200") {
+            alert('同意复工成功');
+            window.location.href = "adminSelectApplicatoon.html";
+          } else {
+            alert("同意复工失败");
+          }
+        });
+      },
+      refuseApplication(applicationId) {
+        var _this = this;
+        axios({
+          // 请求方式
+          method: 'PUT',
+          // 请求的地址
+          url:'http://127.0.0.1:60/admin/adminRefuseApplication/'+applicationId,
+        }).then(function (result) {
+          var code = result.data.code;
+          if (code == "200") {
+            alert("拒绝申请成功");
+            window.location.href = "adminSelectApplicatoon.html";
+          } else {
+            alert("拒绝申请失败");
+          }
+        });
+      },
+    },
+    mounted() {
+      var _this=this;
+      axios({
+        method: "GET",
+        url: "http://127.0.0.1:60/admin/adminSelectApplication/",
+      }).then(function(result) {
+        var code = result.data.code;
+        var data = result.data.data;
+        if (code == "200") {
+          _this.applications=data;
+        }
+      })
+    }
+  });
+</script>
+</body>
+</html>

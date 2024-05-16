@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>员工申请休假</title>
+    <!-- 引入layui css -->
+    <link rel="stylesheet" type="text/css" href="https://www.layuicdn.com/layui-v2.5.6/css/layui.css"/>
+    <script src="https://cdn.bootcss.com/vue/2.5.16/vue.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script></head>
+<body>
+<div id="app">
+    <a href="workerIndex.html" style="float: right">点击返回首页</a>
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">员工id</label>
+            <div class="layui-input-block">
+                <input type="text" name="workerId" v-model="worker.workerId" required lay-verify="required"
+                       placeholder="请输入员工id" autocomplete="off"
+                       class="layui-input" readonly>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">员工姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="workerName" v-model="worker.workerName" required lay-verify="required"
+                       placeholder="请输入员工姓名" autocomplete="off"
+                       class="layui-input" readonly>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请内容</label>
+            <div class="layui-input-block">
+                <input type="text" name="workerApplication" v-model="workerApplication" required
+                       lay-verify="required" placeholder="请输入申请内容（辞职|休假|复工）" autocomplete="off"
+                       class="layui-input"></input>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="applicationDate" v-model="currentTime" required
+                       lay-verify="required" placeholder="请输入申请时间" autocomplete="off"
+                       class="layui-input" id="applicationDateInput">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="button" class="layui-btn" @click="app()" value="立即提交">
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    new Vue({
+        el: "#app",
+        data() {
+            return {
+                application: {},
+                workerName: '',
+                worker: {},
+                currentTime: "",
+                workerApplication: ''
+            }
+        },
+        methods: {
+            app() {
+                var _this = this;
+                _this.application = {
+                    workerId: _this.worker.workerId,
+                    workerName: _this.worker.workerName,
+                    applicationDate: _this.currentTime,
+                    workerApplication: _this.workerApplication,
+                    applicationResult: 0
+                }
+                axios({
+                    method: "POST",
+                    url: "http://127.0.0.1:60/worker/workerIsRelex/",
+                    data: _this.application,
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    }
+                }).then(resp => {
+                    var code = resp.data.code;
+                    var msg = resp.data.msg;
+                    if (code == "200") {
+                        alert("申请成功");
+                        window.location.href = "workerIndex.html";
+                    } else {
+                        alert(msg);
+                    }
+                })
+            }
+        },
+        mounted() {
+            var _this = this;
+            const currentDate = new Date();
+            currentDate.setHours(currentDate.getHours() + 8);
+            const formattedDate = currentDate.toISOString().slice(0, 16);
+            _this.currentTime = formattedDate;
+            _this.workerName = document.cookie.replace(/(?:(?:^|.*;\s*)workerName\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            axios({
+                method: "GET",
+                url: 'http://127.0.0.1:60/worker/workerSelectByWorkerName/' + _this.workerName,
+            }).then(function (result) {
+                var code = result.data.code;
+                var data = result.data.data;
+                if (code == "200") {
+                    _this.worker = data;
+                }
+            });
+        },
+    })
+</script>
+</body>
+</html>
