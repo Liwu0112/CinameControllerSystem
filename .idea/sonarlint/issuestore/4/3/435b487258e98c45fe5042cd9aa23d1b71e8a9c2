@@ -1,53 +1,53 @@
 
-J
-java:S3740"/Provide the parametrized type for this generic.(­‡Æüÿÿÿÿ
-J
-java:S3740"/Provide the parametrized type for this generic.(ºÁà·şÿÿÿÿ
-J
-java:S3740%"/Provide the parametrized type for this generic.(ı¼ó©üÿÿÿÿ
-J
-java:S37401"/Provide the parametrized type for this generic.(ø’Ìüÿÿÿÿ
-E
-java:S3740D"/Provide the parametrized type for this generic.(Èœä
-E
-java:S3740M"/Provide the parametrized type for this generic.(½¤Ù
-E
-java:S3740V"/Provide the parametrized type for this generic.(‚çì°
-J
-java:S3740f"/Provide the parametrized type for this generic.(·ˆ¦ñıÿÿÿÿ
-F
-java:S3740ˆ"/Provide the parametrized type for this generic.(ï²İ„
-F
-java:S3740¨"/Provide the parametrized type for this generic.(Ú¥Íš
-F
-java:S3740Ã"/Provide the parametrized type for this generic.(àî‡ñ
-F
-java:S3740Ì"/Provide the parametrized type for this generic.(Ó»ˆ´
-K
-java:S3740æ"/Provide the parametrized type for this generic.(€ÕËéûÿÿÿÿ
-K
-java:S3740ï"/Provide the parametrized type for this generic.(–¯ú¬ÿÿÿÿÿ
-K
-java:S3740ø"/Provide the parametrized type for this generic.(½×íÿûÿÿÿÿ
-F
-java:S3740Š"/Provide the parametrized type for this generic.(ã³ğ
-F
-java:S3740“"/Provide the parametrized type for this generic.(¸¢’ª
-K
-java:S3740­"/Provide the parametrized type for this generic.(»ŞÕ”şÿÿÿÿ
-g
-java:S1192'"QDefine a constant instead of duplicating this literal "cinameId is null" 5 times.(øÂÿà
-r
-java:S1192¡"[Define a constant instead of duplicating this literal "workerInformations is null" 3 times.(’‡â
-h
-java:S1192Ü"QDefine a constant instead of duplicating this literal "retailId is null" 4 times.( ´›
-r
-java:S1192Å"[Define a constant instead of duplicating this literal "retailInformations is null" 3 times.(¬ú™›
-`
-java:S2583“"DChange this condition so that it does not always evaluate to "false"(›Ú …øÿÿÿÿ
-F
-java:S2160"+Override the "equals" method in this class.(­‡Æüÿÿÿÿ
-T
-java:S1155<">Use isEmpty() to check whether the collection is empty or not.(Å·Ñ«
-T
-java:S1155^">Use isEmpty() to check whether the collection is empty or not.(Å·Ñ«
+p
+java:S3740"/Provide the parametrized type for this generic.(­‡ÆüÿÿÿÿJ$38bf90aa-4591-4d18-b181-12d7cca99603
+p
+java:S3740"/Provide the parametrized type for this generic.(ºÁà·şÿÿÿÿJ$8b48f02c-66b2-4445-a680-31a3ac40d6c1
+p
+java:S3740%"/Provide the parametrized type for this generic.(ı¼ó©üÿÿÿÿJ$dd41b150-f6e5-4c49-8751-db7dbb8110cb
+p
+java:S37401"/Provide the parametrized type for this generic.(ø’ÌüÿÿÿÿJ$459d1862-d1f6-41ac-919b-5d7a1089dd3f
+k
+java:S3740D"/Provide the parametrized type for this generic.(ÈœäJ$3f053fad-7c9c-4249-ad76-006d25b83dc7
+k
+java:S3740M"/Provide the parametrized type for this generic.(½¤ÙJ$1a03f975-b820-4ba7-aea6-aca456281c7a
+k
+java:S3740V"/Provide the parametrized type for this generic.(‚çì°J$9001b8cd-93f0-4d61-beae-21360b72a25d
+p
+java:S3740f"/Provide the parametrized type for this generic.(·ˆ¦ñıÿÿÿÿJ$c627b26a-dea9-49b2-9c1f-78f6249bb0d9
+l
+java:S3740ˆ"/Provide the parametrized type for this generic.(ï²İ„J$be9a7fbb-3791-4826-853b-8d9e5ec46a2a
+l
+java:S3740¨"/Provide the parametrized type for this generic.(Ú¥ÍšJ$09fefed2-ead9-4a64-9ac9-88a100cd0ff9
+l
+java:S3740Ã"/Provide the parametrized type for this generic.(àî‡ñJ$a8961423-aa05-48df-864a-cf4286a9514c
+l
+java:S3740Ì"/Provide the parametrized type for this generic.(Ó»ˆ´J$c84d7c9f-a856-45ee-8094-fafe82639296
+q
+java:S3740æ"/Provide the parametrized type for this generic.(€ÕËéûÿÿÿÿJ$6ed433e6-2033-4a89-8774-214923d5f606
+q
+java:S3740ï"/Provide the parametrized type for this generic.(–¯ú¬ÿÿÿÿÿJ$f254d7ef-369b-497a-b3f7-9d2a5f1e40d2
+q
+java:S3740ø"/Provide the parametrized type for this generic.(½×íÿûÿÿÿÿJ$b4080dfc-bf6a-4ef1-a720-6032e67e1e25
+l
+java:S3740Š"/Provide the parametrized type for this generic.(ã³ğJ$846eb9bc-e0bd-453a-947c-579731cf150f
+l
+java:S3740“"/Provide the parametrized type for this generic.(¸¢’ªJ$b426db8c-caf8-4eab-af1c-a363c3176248
+q
+java:S3740­"/Provide the parametrized type for this generic.(»ŞÕ”şÿÿÿÿJ$32246cea-3036-4525-be2a-5450ab2b36f4
+
+java:S1192'"QDefine a constant instead of duplicating this literal "cinameId is null" 5 times.(øÂÿàJ$564f5bff-bc3d-4ff6-98dc-4905938b6d81
+˜
+java:S1192¡"[Define a constant instead of duplicating this literal "workerInformations is null" 3 times.(’‡âJ$6cb4fa5d-e11a-4b52-82b3-87ec5c11f4fd
+
+java:S1192Ü"QDefine a constant instead of duplicating this literal "retailId is null" 4 times.( ´›J$43aa5cbf-3b2f-45b3-aa50-7923648239cf
+˜
+java:S1192Å"[Define a constant instead of duplicating this literal "retailInformations is null" 3 times.(¬ú™›J$57341215-e991-428c-b72b-a02045c2fd49
+†
+java:S2583“"DChange this condition so that it does not always evaluate to "false"(›Ú …øÿÿÿÿJ$80cae218-abf1-42bd-b692-a68c99755482
+l
+java:S2160"+Override the "equals" method in this class.(­‡ÆüÿÿÿÿJ$6ee4a85d-9145-4e89-a6b4-f64abf5c6d42
+z
+java:S1155<">Use isEmpty() to check whether the collection is empty or not.(Å·Ñ«J$5a16bb00-f28a-4e93-bbf5-619d41e5f44d
+z
+java:S1155^">Use isEmpty() to check whether the collection is empty or not.(Å·Ñ«J$3bef207f-630d-4bc4-9879-d2c878757eda
